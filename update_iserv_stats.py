@@ -47,7 +47,7 @@ df = df[df["month"] != current_month]
 df = pd.concat([df, pd.DataFrame([results])], ignore_index=True)
 
 # 🔧 Sütun sırasını garantiye al (özellikle users_per_school = F olması için)
-df = df[["month", "schools", "authorities", "users", "users per school"]]
+df = df[["month", "schools", "authorities", "users", "users_per_school"]]
 
 # Excel’e yaz
 df.to_excel(EXCEL_PATH, index=False)
