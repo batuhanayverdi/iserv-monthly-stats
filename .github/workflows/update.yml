@@ -3,30 +3,33 @@ name: Update IServ Stats Monthly
 on:
   schedule:
     - cron: '0 8 1 * *'  # Her ayın 1'inde saat 08:00 UTC'de çalışır
-  workflow_dispatch:  # Manuel çalıştırma için
+  workflow_dispatch:
+
+permissions:
+  contents: write  # <-- GITHUB_TOKEN ile yazma izni verir
 
 jobs:
   run-script:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-    - name: Run update script
-      run: python update_iserv_stats.py
+      - name: Run update script
+        run: python update_iserv_stats.py
 
-    - name: Commit updated Excel
-      run: |
-        git config user.name "github-actions"
-        git config user.email "github-actions@github.com"
-        git add iserv_stats.xlsx
-        git commit -m "Update stats for $(date +'%Y-%m')" || echo "No changes to commit"
-        git push
+      - name: Commit updated Excel
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add iserv_stats.xlsx
+          git commit -m "Update stats for $(date +'%Y-%m')" || echo "No changes to commit"
+          git push
