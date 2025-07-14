@@ -15,7 +15,8 @@ labels_map = {
     "überzeugte Schulträger": "authorities"
 }
 
-results = {"month": datetime.today().strftime("%Y-%m")}
+# Aylık veri: Ayın 1’i ve saat 00:00:00 formatında
+results = {"month": datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)}
 
 # Verileri çek
 for span in soup.find_all("span", class_="text-iserv-blue-024 font-bold"):
@@ -28,20 +29,24 @@ for span in soup.find_all("span", class_="text-iserv-blue-024 font-bold"):
             number = int(span.text.replace(".", "").strip())
             results[key] = number
 
-# users_per_school hesapla
-results["users_per_school"] = round(results["users"] / results["schools"])
+# users_per_school hesapla (float, yuvarlama yok)
+results["users_per_school"] = results["users"] / results["schools"]
 
-# Excel dosyasını güncelle
+# Excel dosyasını oku veya oluştur
 try:
     df = pd.read_excel(EXCEL_PATH)
 except FileNotFoundError:
     df = pd.DataFrame(columns=["month", "schools", "authorities", "users", "users_per_school"])
 
-# Aynı ay varsa sil
-df = df[df["month"] != results["month"]]
+# Aynı ay varsa sil (datetime karşılaştırması için normalize et)
+df["month"] = pd.to_datetime(df["month"]).dt.normalize()
+current_month = results["month"].replace(tzinfo=None)
+df = df[df["month"] != current_month]
 
 # Yeni veriyi ekle
 df = pd.concat([df, pd.DataFrame([results])], ignore_index=True)
+
+# Excel’e yaz
 df.to_excel(EXCEL_PATH, index=False)
 
 print("✅ Data updated successfully.")
