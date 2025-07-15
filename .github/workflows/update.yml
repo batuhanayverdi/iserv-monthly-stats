@@ -2,7 +2,7 @@ name: Update IServ Stats Monthly
 
 on:
   schedule:
-    - cron: '0 7 1 * *'  # Her ayın 1'inde saat 08:00 UTC'de çalışır
+    - cron: '0 23 * * *'
   workflow_dispatch:
 
 permissions:
