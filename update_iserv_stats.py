@@ -60,9 +60,9 @@ for i, row in df.iterrows():
         prev_year_row = df[df["month"] == current_month.replace(year=current_month.year - 1)]
         if not prev_year_row.empty:
             try:
-                df.at[i, "yoy_schools"] = ((row["schools"] / prev_year_row["schools"].values[0]) - 1) * 100
-                df.at[i, "yoy_authorities"] = ((row["authorities"] / prev_year_row["authorities"].values[0]) - 1) * 100
-                df.at[i, "yoy_users"] = ((row["users"] / prev_year_row["users"].values[0]) - 1) * 100
+                df.at[i, "yoy_schools"] = ((row["schools"] / prev_year_row["schools"].values[0]) - 1)
+                df.at[i, "yoy_authorities"] = ((row["authorities"] / prev_year_row["authorities"].values[0]) - 1)
+                df.at[i, "yoy_users"] = ((row["users"] / prev_year_row["users"].values[0]) - 1)
             except Exception as e:
                 print(f"YoY hesaplama hatası ({row['month']}): {e}")
 
