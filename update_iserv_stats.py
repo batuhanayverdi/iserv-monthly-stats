@@ -49,7 +49,14 @@ df = pd.concat([df, pd.DataFrame([results])], ignore_index=True)
 # 🔧 Sütun sırasını garantiye al (özellikle users_per_school = F olması için)
 df = df[["month", "schools", "authorities", "users", "users_per_school"]]
 
-# Excel’e yaz
-df.to_excel(EXCEL_PATH, index=False)
+with pd.ExcelWriter(EXCEL_PATH, engine="openpyxl") as writer:
+    df = df.astype({
+        "schools": int,
+        "authorities": int,
+        "users": int,
+        "users_per_school": float
+    })
+    df.to_excel(writer, index=False)
+
 
 print("✅ Data updated successfully.")
